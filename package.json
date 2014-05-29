@@ -1,0 +1,32 @@
+{
+  "name": "koc-api",
+  "version": "0.0.0",
+  "description": "API for the online MMORPG Kings of Chaos (KoC)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ThomasDalla/koc-api"
+  },
+  "keywords": [
+    "koc",
+    "kings",
+    "chaos",
+    "api",
+    "mmorpg",
+    "online",
+    "game",
+    "mobile"
+  ],
+  "author": "Thomas Dall'Agnese",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/ThomasDalla/koc-api/issues"
+  },
+  "dependencies": {
+    "body-parser": "1.x.x",
+    "express": "4.x.x"
+  }
+}
