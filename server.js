@@ -12,6 +12,25 @@ var KoC        = require('koc');            // the API we use to call KoC
 // Constants
 const KOC_SESSION_HEADER_NAME = 'x-koc-session';
 
+// Helper
+var requireParameters = function(request_parameters, required_parameters, action) {
+    if(request_parameters === undefined)
+        return {
+            success: false,
+            error: "Please specify parameters to " + action
+        };
+    for(var i in required_parameters) {
+        var required_parameter = required_parameters[i];
+        var param_value        = request_parameters[required_parameter];
+        if(param_value===undefined||!param_value.length)
+            return {
+                success: false,
+                error: "Please specify '" + required_parameter + "' to " + action
+            };
+    }
+    return null;
+}
+
 // configure app to use bodyParser()
 // this will let us easily get the data from a POST
 app.use(bodyParser());
@@ -58,21 +77,53 @@ api.route('/captcha').get(function(req, res) {
     });
 });
 
+// REGISTER
+// -----------------------------------------------------------------------------
+api.route('/register').post(function(req, res) {
+    var checkParameters = requireParameters(req.body, ["race", "username", "password", "email", "challenge", "challenge_response"], "register");
+    if(checkParameters!==null) {
+        res.json(checkParameters);
+        return;
+    }
+	var username           = req.body.username;
+	var password           = req.body.password;
+	var race               = req.body.race;
+	var email              = req.body.email;
+	var challenge          = req.body.challenge;
+	var challenge_response = req.body.challenge_response;
+    res.koc.register(race, username, password, email, challenge, challenge_response)
+    .then( function(result) {
+        res.json(result);
+    }).fail( function(result) {
+        res.json(result);
+    });
+});
+
+// VERIFY
+// -----------------------------------------------------------------------------
+api.route('/verify').post(function(req, res) {
+    var checkParameters = requireParameters(req.body, ["username",  "password", "password2"], "verify");
+    if(checkParameters!==null)
+        return checkParameters;
+	var username  = req.body.username;
+	var password  = req.body.password;
+	var password2 = req.body.password2;
+    res.koc.verify(username, password, password2)
+    .then( function(result) {
+        res.json(result);
+    }).fail( function(result) {
+        res.json(result);
+    });
+});
+
 // LOGIN
 // -----------------------------------------------------------------------------
 api.route('/login').post(function(req, res) {
+    var checkParameters = requireParameters(req.body, ["username",  "password"], "login");
+    if(checkParameters!==null)
+        return checkParameters;
 	var username = req.body.username;
-	if( username === undefined || !username.length )
-	    res.json({
-	       success: false,
-	       error: "Please specify a username to login..."
-	    });
 	var password = req.body.password;
-	if( password === undefined || !password.length )
-	    res.json({
-	       success: false,
-	       error: "Please specify a password to login..."
-	    });
     res.koc.login(username, password)
     .then( function(result) {
         res.json(result);
