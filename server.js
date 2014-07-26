@@ -47,6 +47,17 @@ api.get('/', function(req, res) {
 	res.json({ message: 'API Root. Read the doc to learn how to use it.' });
 });
 
+// CAPTCHA
+// -----------------------------------------------------------------------------
+api.route('/captcha').get(function(req, res) {
+    res.koc.getLoginCaptcha()
+    .then( function(result) {
+        res.json(result);
+    }).fail( function(result) {
+        res.json(result);
+    });
+});
+
 // LOGIN
 // -----------------------------------------------------------------------------
 api.route('/login').post(function(req, res) {
