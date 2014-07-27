@@ -33,7 +33,10 @@ var requireParameters = function(request_parameters, required_parameters, action
 
 // configure app to use bodyParser()
 // this will let us easily get the data from a POST
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 app.all('/*', function(req, res, next){
     res.header('Access-Control-Allow-Origin', '*');
     //res.header('Access-Control-Allow-Credentials', true);
@@ -76,7 +79,7 @@ api.get('/', function(req, res) {
 // CAPTCHA
 // -----------------------------------------------------------------------------
 api.route('/captcha').get(function(req, res) {
-    res.koc.getLoginCaptcha()
+    res.koc.getReCaptchaChallenge()
     .then( function(result) {
         res.json(result);
     }).fail( function(result) {
@@ -141,7 +144,7 @@ api.route('/login').post(function(req, res) {
 
 // Get User Info (from the Base)
 // -----------------------------------------------------------------------------
-api.route('/user').get(function(req, res) {
+api.route('/:var(user|base)').get(function(req, res) {
     res.koc.getUserInfo()
     .then( function(result) {
         res.json(result);
