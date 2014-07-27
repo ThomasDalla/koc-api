@@ -29,11 +29,18 @@ var requireParameters = function(request_parameters, required_parameters, action
             };
     }
     return null;
-}
+};
 
 // configure app to use bodyParser()
 // this will let us easily get the data from a POST
 app.use(bodyParser());
+app.all('/*', function(req, res, next){
+    res.header('Access-Control-Allow-Origin', '*');
+    //res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Origin');
+    next();
+});
 
 // Home
 // =============================================================================
@@ -125,6 +132,17 @@ api.route('/login').post(function(req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
     res.koc.login(username, password)
+    .then( function(result) {
+        res.json(result);
+    }).fail( function(result) {
+        res.json(result);
+    });
+});
+
+// Get User Info (from the Base)
+// -----------------------------------------------------------------------------
+api.route('/user').get(function(req, res) {
+    res.koc.getUserInfo()
     .then( function(result) {
         res.json(result);
     }).fail( function(result) {
