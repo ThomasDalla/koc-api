@@ -144,8 +144,19 @@ api.route('/login').post(function(req, res) {
 
 // Get User Info (from the Base)
 // -----------------------------------------------------------------------------
-api.route('/:var(user|base)').get(function(req, res) {
+api.route('/:var(user|base|userinfo)').get(function(req, res) {
     res.koc.getUserInfo()
+    .then( function(result) {
+        res.json(result);
+    }).fail( function(result) {
+        res.json(result);
+    });
+});
+
+// Get Races Information
+// -----------------------------------------------------------------------------
+api.route('/races').get(function(req, res) {
+    res.koc.getRacesInformation()
     .then( function(result) {
         res.json(result);
     }).fail( function(result) {
