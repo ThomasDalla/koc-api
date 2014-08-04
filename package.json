@@ -21,13 +21,13 @@
     "mobile"
   ],
   "author": "Thomas Dall'Agnese",
-  "license": "BSD-2-Clause",
+  "license": "GPL v2",
   "bugs": {
     "url": "https://github.com/ThomasDalla/koc-api/issues"
   },
   "dependencies": {
     "body-parser": "1.x.x",
     "express": "4.x.x",
-    "koc": "*"
+    "koc": "0.1.0"
   }
 }
