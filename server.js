@@ -12,23 +12,69 @@ var KoC        = require('koc');            // the API we use to call KoC
 // Constants
 const KOC_SESSION_HEADER_NAME = 'x-koc-session';
 
-// Helper
-var requireParameters = function(request_parameters, required_parameters, action) {
-    if(request_parameters === undefined)
-        return {
+// Helpers
+
+var checkRequiredParameters = function(req, res, required_parameters, action) {
+    var request_parameters = req.body;
+    if(request_parameters === undefined) {
+        res.json({
             success: false,
             error: "Please specify parameters to " + action
-        };
+        });
+        return false;
+    }
     for(var i in required_parameters) {
         var required_parameter = required_parameters[i];
         var param_value        = request_parameters[required_parameter];
-        if(param_value===undefined||!param_value.length)
-            return {
+        if(param_value===undefined) {
+            res.json({
                 success: false,
                 error: "Please specify '" + required_parameter + "' to " + action
-            };
+            });
+            return false;
+        }
     }
-    return null;
+    return true;
+};
+
+var loggedIn = function( res, action ) {
+  if( action === undefined || action === null || !action.length )
+    action = "perform that action";
+  if( res.koc !== undefined && res.koc.hasSession() )
+    return true;
+  res.json({
+     success: false,
+     error: "You need to be logged in to " + action
+  });
+  return false;
+};
+
+var passPromise = function( promise, req, res, requireSession, required_parameters, optional_parameters, action ) {
+    // Check the session
+    if( requireSession === undefined || !requireSession  || ( requireSession && loggedIn( res, action ) ) ) {
+        // Check the parameters
+        if( required_parameters === undefined || required_parameters === null
+                || ( required_parameters.length && checkRequiredParameters(req, res, required_parameters, action) ) ) {
+            // Prepare the parameters
+            var parameters = [];
+            if( required_parameters !== undefined && required_parameters !== null  ) {
+                required_parameters.forEach(function(parameter){
+                    parameters.push(req.body[parameter]);
+                });
+            }
+            if( optional_parameters !== undefined && optional_parameters !== null  ) {
+                optional_parameters.forEach(function(parameter){
+                    parameters.push(req.body[parameter]);
+                });
+            }
+            promise.apply(res.koc,parameters)
+            .then( function(result) {
+                res.json(result);
+            }).fail( function(result) {
+                res.json(result);
+            });
+        }
+    }
 };
 
 // configure app to use bodyParser()
@@ -79,89 +125,91 @@ api.get('/', function(req, res) {
 // CAPTCHA
 // -----------------------------------------------------------------------------
 api.route('/captcha').get(function(req, res) {
-    res.koc.getReCaptchaChallenge()
-    .then( function(result) {
-        res.json(result);
-    }).fail( function(result) {
-        res.json(result);
-    });
+    passPromise( res.koc.getReCaptchaChallenge, req, res, false );
 });
 
 // REGISTER
 // -----------------------------------------------------------------------------
 api.route('/register').post(function(req, res) {
-    var checkParameters = requireParameters(req.body, ["race", "username", "password", "email", "challenge", "challenge_response"], "register");
-    if(checkParameters!==null) {
-        res.json(checkParameters);
-        return;
-    }
-	var username           = req.body.username;
-	var password           = req.body.password;
-	var race               = req.body.race;
-	var email              = req.body.email;
-	var challenge          = req.body.challenge;
-	var challenge_response = req.body.challenge_response;
-    res.koc.register(race, username, password, email, challenge, challenge_response)
-    .then( function(result) {
-        res.json(result);
-    }).fail( function(result) {
-        res.json(result);
-    });
+    passPromise( res.koc.register, req, res, false, ["race", "username", "password", "email", "challenge", "challenge_response"], [], "register" );
 });
 
 // VERIFY
 // -----------------------------------------------------------------------------
 api.route('/verify').post(function(req, res) {
-    var checkParameters = requireParameters(req.body, ["username",  "password", "password2"], "verify");
-    if(checkParameters!==null)
-        return checkParameters;
-	var username  = req.body.username;
-	var password  = req.body.password;
-	var password2 = req.body.password2;
-    res.koc.verify(username, password, password2)
-    .then( function(result) {
-        res.json(result);
-    }).fail( function(result) {
-        res.json(result);
-    });
+    passPromise( res.koc.verify, req, res, false, [ "username", "password", "password2" ], [], "verify" );
 });
 
 // LOGIN
 // -----------------------------------------------------------------------------
 api.route('/login').post(function(req, res) {
-    var checkParameters = requireParameters(req.body, ["username",  "password"], "login");
-    if(checkParameters!==null)
-        return checkParameters;
-	var username = req.body.username;
-	var password = req.body.password;
-    res.koc.login(username, password)
-    .then( function(result) {
-        res.json(result);
-    }).fail( function(result) {
-        res.json(result);
-    });
+    passPromise( res.koc.login, req, res, false, [ "username", "password" ], [], "login" );
 });
 
 // Get User Info (from the Base)
 // -----------------------------------------------------------------------------
 api.route('/:var(user|base|userinfo)').get(function(req, res) {
-    res.koc.getUserInfo()
-    .then( function(result) {
-        res.json(result);
-    }).fail( function(result) {
-        res.json(result);
-    });
+    passPromise( res.koc.getUserInfo, req, res, true );
 });
 
 // Get Races Information
 // -----------------------------------------------------------------------------
 api.route('/races').get(function(req, res) {
-    res.koc.getRacesInformation()
-    .then( function(result) {
-        res.json(result);
-    }).fail( function(result) {
-        res.json(result);
-    });
+    passPromise( res.koc.getRacesInformation, req, res, false );
+});
+
+// Get Left-Side Menu (Command Center, etc...)
+// -----------------------------------------------------------------------------
+api.route('/menu').get(function(req, res) {
+    passPromise( res.koc.getLeftMenuInfo, req, res, true );
+});
+
+// Toggle Advisor
+// -----------------------------------------------------------------------------
+api.route( '/:var(toggle-advisor|toggleAdvisor|toggle_advisor)' ).get( function( req, res ) {
+    passPromise( res.koc.toggleAdvisor, req, res, true );
+});
+
+// Change Race
+// -----------------------------------------------------------------------------
+api.route( '/:var(change-race|changeRace|change_race)' ).get( function( req, res ) {
+    passPromise( res.koc.changeRace, req, res, true, ["new_race"], [], "change race" );
+});
+
+// Toggle Advisor
+// -----------------------------------------------------------------------------
+api.route( '/menu' ).get( function( req, res ) {
+    passPromise( res.koc.getLeftMenuInfo, req, res, true );
+});
+
+// Change Commander Info
+// -----------------------------------------------------------------------------
+api.route( '/:var(change-commander-info|changeCommanderInfo|change_commander_info)' ).post( function( req, res ) {
+    passPromise( res.koc.getChangeCommanderInfo, req, res, true, ["new_race"], [], "get change commander info" );
+});
+
+// Change Commander
+// -----------------------------------------------------------------------------
+api.route( '/:var(change-commander|changeCommander|change_commander)' ).post( function( req, res ) {
+    passPromise( res.koc.changeCommander, req, res, true, ["new_commander_id","password"], ["statement"], "change your commander" );
+});
+
+// Ditch Commander
+// -----------------------------------------------------------------------------
+api.route( '/:var(ditch-commander|ditchCommander|ditch_commander)' ).post( function( req, res ) {
+    passPromise( res.koc.ditchCommander, req, res, true, ["password"], ["statement"], "ditch your poor commander" );
+});
+
+// Get Help
+// -----------------------------------------------------------------------------
+api.route('/help').get(function(req, res) {
+    res.json( res.koc.getHelp() );
+});
+
+// Forgot Pass
+// -----------------------------------------------------------------------------
+api.route( '/:var(forgot-pass|forgotPass|forgot_pass)' ).post( function( req, res ) {
+    passPromise( res.koc.forgotPass, req, res, false, ["username","email"], [], "recover your pass (even if empty)" );
 });
 
 // REGISTER OUR ROUTES
