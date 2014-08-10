@@ -157,3 +157,21 @@ describe('POST /api/register', function(){
       });
   });
 });
+
+describe('GET /api/logout', function(){
+  it('respond with json', function(done){
+    request(app)
+      .get('/api/logout')
+      .set('Accept', 'application/json')
+      .set('X-KoC-Session', 'foo')
+      .expect(200)
+      .expect(function(res){
+          res.body.should.be.an('object').that.has.property('error').that.is.empty;
+          res.body.should.be.an('object').that.has.property('success').that.is.true;
+      })
+      .end(function(err, res){
+        if (err) return done(err);
+        done();
+      });
+  });
+});

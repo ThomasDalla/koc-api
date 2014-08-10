@@ -213,6 +213,11 @@ api.route( '/:var(forgot-pass|forgotPass|forgot_pass)' ).post( function( req, re
     passPromise( res.koc.forgotPass, req, res, false, ["username","email"], [], "recover your pass (even if empty)" );
 });
 
+// Logout
+api.route( '/logout' ).get( function( req, res ) {
+    passPromise( res.koc.logout, req, res, true );
+});
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
