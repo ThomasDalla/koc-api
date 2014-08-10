@@ -17,12 +17,17 @@ const KOC_SESSION_HEADER_NAME = 'x-koc-session';
 // Helpers
 // -----------------------------------------------------------------------------
 
+var getTimeStamp = function() {
+    return +new Date();
+};
+
 var checkRequiredParameters = function(req, res, required_parameters, action) {
     var request_parameters = req.body;
     if(request_parameters === undefined) {
         res.json({
             success: false,
-            error: "Please specify parameters to " + action
+            error: "Please specify parameters to " + action,
+            timestamp: getTimeStamp()
         });
         return false;
     }
@@ -32,7 +37,8 @@ var checkRequiredParameters = function(req, res, required_parameters, action) {
         if(param_value===undefined) {
             res.json({
                 success: false,
-                error: "Please specify '" + required_parameter + "' to " + action
+                error: "Please specify '" + required_parameter + "' to " + action,
+                timestamp: getTimeStamp()
             });
             return false;
         }
@@ -47,7 +53,8 @@ var loggedIn = function( res, action ) {
     return true;
   res.json({
      success: false,
-     error: "You need to be logged in to " + action
+     error: "You need to be logged in to " + action,
+     timestamp: getTimeStamp()
   });
   return false;
 };
@@ -72,8 +79,10 @@ var passPromise = function( promise, req, res, requireSession, required_paramete
             }
             promise.apply(res.koc,parameters)
             .then( function(result) {
+                result.timestamp = getTimeStamp();
                 res.json(result);
             }).fail( function(result) {
+                result.timestamp = getTimeStamp();
                 res.json(result);
             });
         }
@@ -121,7 +130,10 @@ api.use(function(req, res, next) {
 
 // API Home
 api.get('/', function(req, res) {
-	res.json({ message: 'API Root. Read the doc to learn how to use it.' });
+	res.json({
+	    message: 'API Root. Read the doc to learn how to use it.',
+        timestamp: getTimeStamp()
+	});
 });
 
 // CAPTCHA
@@ -191,7 +203,9 @@ api.route( '/:var(ditch-commander|ditchCommander|ditch_commander)' ).post( funct
 
 // Get Help
 api.route('/help').get(function(req, res) {
-    res.json( res.koc.getHelp() );
+    var result = res.koc.getHelp();
+    result.timestamp = getTimeStamp();
+    res.json( result );
 });
 
 // Forgot Pass
