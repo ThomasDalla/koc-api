@@ -218,6 +218,20 @@ api.route( '/logout' ).get( function( req, res ) {
     passPromise( res.koc.logout, req, res, true );
 });
 
+// Get User Stats (Full)
+api.route('/stats/:userid').get(function(req, res) {
+    var userid = req.params.userid;
+    if(!isFinite(userid)) {
+        res.json({
+           success: false,
+           error: "'userid' must be a number"
+        });
+        return;
+    }
+    req.body.userid = Number(userid);
+    passPromise( res.koc.getFullStats, req, res, true, [ 'userid' ], [], 'see user stats' );
+});
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
