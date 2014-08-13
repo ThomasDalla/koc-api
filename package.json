@@ -26,8 +26,8 @@
     "url": "https://github.com/ThomasDalla/koc-api/issues"
   },
   "dependencies": {
-    "body-parser": "1.x.x",
-    "express": "4.x.x",
+    "body-parser": "1.6.3",
+    "express": "4.8.3",
     "koc": "0.1.5"
   },
   "devDependencies": {
