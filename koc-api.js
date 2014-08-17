@@ -177,7 +177,7 @@ api.route( '/:var(toggle-advisor|toggleAdvisor|toggle_advisor)' ).get( function(
 });
 
 // Change Race
-api.route( '/:var(change-race|changeRace|change_race)' ).get( function( req, res ) {
+api.route( '/:var(change-race|changeRace|change_race)' ).post( function( req, res ) {
     passPromise( res.koc.changeRace, req, res, true, ["new_race"], [], "change race" );
 });
 
