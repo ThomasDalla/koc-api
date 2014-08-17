@@ -187,8 +187,8 @@ api.route( '/menu' ).get( function( req, res ) {
 });
 
 // Change Commander Info
-api.route( '/:var(change-commander-info|changeCommanderInfo|change_commander_info)' ).post( function( req, res ) {
-    passPromise( res.koc.getChangeCommanderInfo, req, res, true, ["new_race"], [], "get change commander info" );
+api.route( '/:var(change-commander-info|changeCommanderInfo|change_commander_info)' ).get( function( req, res ) {
+    passPromise( res.koc.getChangeCommanderInfo, req, res, true, [], [], "get change commander info" );
 });
 
 // Change Commander
