@@ -64,15 +64,16 @@ var passPromise = function( promise, req, res, requireSession, required_paramete
     if( requireSession === undefined || !requireSession  || ( requireSession && loggedIn( res, action ) ) ) {
         // Check the parameters
         if( required_parameters === undefined || required_parameters === null
+                || !required_parameters.length
                 || ( required_parameters.length && checkRequiredParameters(req, res, required_parameters, action) ) ) {
             // Prepare the parameters
             var parameters = [];
-            if( required_parameters !== undefined && required_parameters !== null  ) {
+            if( required_parameters !== undefined && required_parameters !== null && required_parameters.length ) {
                 required_parameters.forEach(function(parameter){
                     parameters.push(req.body[parameter]);
                 });
             }
-            if( optional_parameters !== undefined && optional_parameters !== null  ) {
+            if( optional_parameters !== undefined && optional_parameters !== null && optional_parameters.length ) {
                 optional_parameters.forEach(function(parameter){
                     parameters.push(req.body[parameter]);
                 });
