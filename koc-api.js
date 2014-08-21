@@ -233,6 +233,11 @@ api.route('/stats/:userid').get(function(req, res) {
     passPromise( res.koc.getFullStats, req, res, true, [ 'userid' ], [], 'see user stats' );
 });
 
+// Get Armory
+api.route('/armory').get(function(req, res) {
+    passPromise( res.koc.getArmory, req, res, true );
+});
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
