@@ -238,6 +238,11 @@ api.route('/armory').get(function(req, res) {
     passPromise( res.koc.getArmory, req, res, true );
 });
 
+// Buy Weapons
+api.route('/armory').post(function(req, res) {
+    passPromise( res.koc.buyWeapons, req, res, true, [ 'turing', 'inputNameValue' ], [], 'update your inventory' );
+});
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
