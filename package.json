@@ -1,6 +1,6 @@
 {
   "name": "koc-api",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "API for the online MMORPG Kings of Chaos (KoC)",
   "main": "server.js",
   "scripts": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "body-parser": "1.6.3",
     "express": "4.8.3",
-    "koc": "0.1.11"
+    "koc": "0.1.12"
   },
   "devDependencies": {
     "mocha": "1.x.x",
