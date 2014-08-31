@@ -152,6 +152,11 @@ api.route('/verify').post(function(req, res) {
     passPromise( res.koc.verify, req, res, false, [ "username", "password", "password2" ], [], "verify" );
 });
 
+// VERIFY E-MAIL
+api.route('/:var(verify-email|verify_email|verifyEmail)').post(function(req, res) {
+    passPromise( res.koc.verifyEmail, req, res, true, [ "email" ], [], "verify the e-mail" );
+});
+
 // LOGIN
 api.route('/login').post(function(req, res) {
     passPromise( res.koc.login, req, res, false, [ "username", "password" ], [], "login" );
