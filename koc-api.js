@@ -238,15 +238,24 @@ api.route('/stats/:userid').get(function(req, res) {
     passPromise( res.koc.getFullStats, req, res, true, [ 'userid' ], [], 'see user stats' );
 });
 
-// Get Armory
-api.route('/armory').get(function(req, res) {
-    passPromise( res.koc.getArmory, req, res, true );
-});
-
-// Buy Weapons
-api.route('/armory').post(function(req, res) {
+// Armory
+api.route('/armory')
+    .get(function(req, res) {
+        passPromise( res.koc.getArmory, req, res, true );
+    })
+    .post(function(req, res) {
     passPromise( res.koc.buyWeapons, req, res, true, [ 'turing', 'inputNameValue' ], [], 'update your inventory' );
 });
+
+// Train
+api.route('/train')
+    .get(function(req, res) {
+        passPromise( res.koc.getTraining, req, res, true );
+    })
+    .post(function(req, res) {
+    passPromise( res.koc.train, req, res, true, [ 'turing', 'inputNameValue' ], [], 'train your troops' );
+});
+
 
 // REGISTER OUR ROUTES
 // =============================================================================
