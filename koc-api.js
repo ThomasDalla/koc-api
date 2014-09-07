@@ -244,8 +244,8 @@ api.route('/armory')
         passPromise( res.koc.getArmory, req, res, true );
     })
     .post(function(req, res) {
-    passPromise( res.koc.buyWeapons, req, res, true, [ 'turing', 'inputNameValue' ], [], 'update your inventory' );
-});
+        passPromise( res.koc.buyWeapons, req, res, true, [ 'turing', 'inputNameValue' ], [], 'update your inventory' );
+    });
 
 // Train
 api.route('/train')
@@ -253,8 +253,17 @@ api.route('/train')
         passPromise( res.koc.getTraining, req, res, true );
     })
     .post(function(req, res) {
-    passPromise( res.koc.train, req, res, true, [ 'turing', 'inputNameValue' ], [], 'train your troops' );
-});
+        passPromise( res.koc.train, req, res, true, [ 'turing', 'inputNameValue' ], [], 'train your troops' );
+    });
+
+// Mercenaries
+api.route('/:var(mercs|mercenaries)')
+    .get(function(req, res) {
+        passPromise( res.koc.getMercenaries, req, res, true );
+    })
+    .post(function(req, res) {
+        passPromise( res.koc.hireMercenaries, req, res, true, [ 'turing', 'inputNameValue' ], [], 'hire mercenaries' );
+    });
 
 
 // REGISTER OUR ROUTES
