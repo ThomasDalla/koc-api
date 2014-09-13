@@ -265,14 +265,16 @@ api.route('/:var(mercs|mercenaries)')
         passPromise( res.koc.hireMercenaries, req, res, true, [ 'turing', 'inputNameValue' ], [], 'hire mercenaries' );
     });
 
-// Recruit
-api.route('/recruit')
-    .get(function(req, res) {
-        passPromise( res.koc.recruit, req, res, true );
-    })
-    .post(function(req, res) {
-        passPromise( res.koc.recruit, req, res, true, [ 'data' ], [], 'recruit soliders' );
-    });
+// Recruit & Clicker
+[ 'recruit', 'clicker' ].forEach(function(action){
+    api.route('/'+action)
+        .get(function(req, res) {
+            passPromise( res.koc[action], req, res, true );
+        })
+        .post(function(req, res) {
+            passPromise( res.koc[action], req, res, true, [ 'data' ], [], 'recruit soliders' );
+        });
+});
 
 
 // REGISTER OUR ROUTES
