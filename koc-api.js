@@ -6,7 +6,7 @@
 // Dependencies
 // -----------------------------------------------------------------------------
 var express    = require('express');        // call express
-var app        = express(); 				// define our app using express
+var app        = express(); 				        // define our app using express
 var bodyParser = require('body-parser');
 var KoC        = require('koc');            // the API we use to call KoC
 
@@ -31,9 +31,8 @@ var checkRequiredParameters = function(req, res, required_parameters, action) {
         });
         return false;
     }
-    for(var i in required_parameters) {
-        var required_parameter = required_parameters[i];
-        var param_value        = request_parameters[required_parameter];
+    required_parameters.forEach(function(required_parameter){
+        var param_value = request_parameters[required_parameter];
         if(param_value===undefined) {
             res.json({
                 success: false,
@@ -42,7 +41,7 @@ var checkRequiredParameters = function(req, res, required_parameters, action) {
             });
             return false;
         }
-    }
+    });
     return true;
 };
 
@@ -276,6 +275,7 @@ api.route('/:var(mercs|mercenaries)')
         });
 });
 
+// TODO: Attack Log etc...
 
 // REGISTER OUR ROUTES
 // =============================================================================
