@@ -1,6 +1,6 @@
 {
   "name": "koc-api",
-  "version": "0.2.7",
+  "version": "0.2.7.2",
   "description": "API for the online MMORPG Kings of Chaos (KoC)",
   "main": "server.js",
   "scripts": {
