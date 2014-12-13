@@ -282,9 +282,16 @@ api.route('/attack')
   });
 
 // Battlefield
-api.route('/battlefield')
-  .post(function(req, res) {
-      passPromise( res.koc.battlefield, req, res, true, [], [ 'page' ] );
+api.route('/battlefield/:page')
+  .get(function(req, res) {
+      var page = req.params.page;
+      if(!isFinite(page)) {
+        passPromise( res.koc.attack, req, res, true );
+      }
+      else {
+        req.body.page = Number(page);
+        passPromise( res.koc.battlefield, req, res, true, [ 'page' ], [] );
+      }
   });
 
 // Attack Log
@@ -300,21 +307,48 @@ api.route('/:var(intelligence|intel)')
   });
 
 // Battle Report
-api.route('/:var(battleReport|battle-report|battle_report)')
-  .post(function(req, res) {
-      passPromise( res.koc.battleReport, req, res, true, [ 'attack_id' ], [], 'retrieve the battle reports' );
+api.route('/:var(battleReport|battle-report|battle_report)/:attack_id')
+  .get(function(req, res) {
+    var attack_id = req.params.attack_id;
+    if(!isFinite(attack_id)) {
+      res.json({
+        success: false,
+        error: "'attack_id' must be a number"
+      });
+      return;
+    }
+    req.body.attack_id = Number(attack_id);
+    passPromise( res.koc.battleReport, req, res, true, [ 'attack_id' ], [], 'retrieve the battle reports' );
   });
 
 // Intel File
-api.route('/:var(intelFile|intel-file|intel_file)')
-  .post(function(req, res) {
-      passPromise( res.koc.intelFile, req, res, true, [ 'asset_id' ], [], 'retrieve the intelligence file' );
+api.route('/:var(intelFile|intel-file|intel_file)/:asset_id')
+  .get(function(req, res) {
+    var asset_id = req.params.asset_id;
+    if(!isFinite(asset_id)) {
+      res.json({
+        success: false,
+        error: "'asset_id' must be a number"
+      });
+      return;
+    }
+    req.body.asset_id = Number(asset_id);
+    passPromise( res.koc.intelFile, req, res, true, [ 'asset_id' ], [], 'retrieve the intelligence file' );
   });
 
 // Intel Detail
-api.route('/:var(intelDetail|intel-detail|intel_detail)')
-  .post(function(req, res) {
-      passPromise( res.koc.intelDetail, req, res, true, [ 'report_id' ], [], 'retrieve the spy report detail' );
+api.route('/:var(intelDetail|intel-detail|intel_detail)/:report_id')
+  .get(function(req, res) {
+    var report_id = req.params.report_id;
+    if(!isFinite(report_id)) {
+      res.json({
+        success: false,
+        error: "'report_id' must be a number"
+      });
+      return;
+    }
+    req.body.report_id = Number(report_id);
+    passPromise( res.koc.intelDetail, req, res, true, [ 'report_id' ], [], 'retrieve the spy report detail' );
   });
 
 // REGISTER OUR ROUTES
