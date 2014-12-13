@@ -277,7 +277,7 @@ api.route('/:var(mercs|mercenaries)')
 
 // Attack
 api.route('/attack')
-  .post(function(req, res) {
+  .get(function(req, res) {
       passPromise( res.koc.attack, req, res, true );
   });
 
