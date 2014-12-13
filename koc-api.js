@@ -275,10 +275,16 @@ api.route('/:var(mercs|mercenaries)')
         });
 });
 
+// Attack
+api.route('/attack')
+  .post(function(req, res) {
+      passPromise( res.koc.attack, req, res, true );
+  });
+
 // Battlefield
 api.route('/battlefield')
   .post(function(req, res) {
-      passPromise( res.koc.battlefield, req, res, false, [], [ 'page' ] );
+      passPromise( res.koc.battlefield, req, res, true, [], [ 'page' ] );
   });
 
 // Attack Log
