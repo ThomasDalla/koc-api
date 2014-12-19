@@ -351,6 +351,12 @@ api.route('/:var(intelDetail|intel-detail|intel_detail)/:report_id')
     passPromise( res.koc.intelDetail, req, res, true, [ 'report_id' ], [], 'retrieve the spy report detail' );
   });
 
+// Index
+api.route('/index')
+  .get(function(req, res) {
+    passPromise( res.koc.index, req, res, false );
+  });
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
