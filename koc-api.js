@@ -357,6 +357,20 @@ api.route('/index')
     passPromise( res.koc.index, req, res, false );
   });
 
+// Get User Stats (XHR)
+api.route('/quickstats/:userid').get(function(req, res) {
+  var userid = req.params.userid;
+  if(!isFinite(userid)) {
+    res.json({
+      success: false,
+      error: "'userid' must be a number",
+    });
+    return;
+  }
+  req.body.userid = Number(userid);
+  passPromise( res.koc.getQuickStats, req, res, true, [ 'userid' ], [], 'see user stats' );
+});
+
 // Spy (recon)
 api.route('/:var(spy|recon)/:userid')
   .get(function(req, res) {
