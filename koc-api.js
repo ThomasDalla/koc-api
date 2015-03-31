@@ -398,6 +398,33 @@ api.route('/:var(spy|recon)/:userid')
     passPromise( res.koc.recon, req, res, true, [ 'userid', 'turing' ], [], 'recon a user' );
   });
 
+// Attack
+api.route('/attack/:userid')
+  .get(function(req, res) {
+    var userid = req.params.userid;
+    if(!isFinite(userid)&&userid>0) {
+      res.json({
+        success: false,
+        error: "'userid' must be a positive number",
+      });
+      return;
+    }
+    req.body.userid = Number(userid);
+    passPromise( res.koc.attack, req, res, true, [ 'userid' ] );
+  })
+  .post(function(req, res) {
+    var userid = req.params.userid;
+    if(!isFinite(userid)&&userid>0) {
+      res.json({
+        success: false,
+        error: "'userid' must be a positive number",
+      });
+      return;
+    }
+    req.body.userid = Number(userid);
+    passPromise( res.koc.attack, req, res, true, [ 'userid', 'turing' ], [], 'attack a user' );
+  });
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
