@@ -276,17 +276,17 @@ api.route('/:var(mercs|mercenaries)')
 });
 
 // Attack
-api.route('/attack')
+api.route('/attackfield')
   .get(function(req, res) {
-      passPromise( res.koc.attack, req, res, true );
+      passPromise( res.koc.attackfield, req, res, true );
   });
 
 // Battlefield
 api.route('/battlefield/:page')
   .get(function(req, res) {
       var page = req.params.page;
-      if(!isFinite(page)) {
-        passPromise( res.koc.attack, req, res, true );
+      if(!isFinite(page)||page==0) {
+        passPromise( res.koc.attackfield, req, res, true );
       }
       else {
         req.body.page = Number(page);
