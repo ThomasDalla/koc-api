@@ -428,8 +428,8 @@ api.route('/attack/:userid')
 // Attack
 api.route('/version')
   .get(function(req, res) {
-    var apiVersion = require('package.json').version;
-    var kocVersion = require('node_modules/koc/package.json').version;
+    var apiVersion = require('./package.json').version;
+    var kocVersion = require('./node_modules/koc/package.json').version;
     res.json({
       api: apiVersion,
       koc: kocVersion,
