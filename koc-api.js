@@ -425,6 +425,17 @@ api.route('/attack/:userid')
     passPromise( res.koc.attack, req, res, true, [ 'userid', 'turing' ], [], 'attack a user' );
   });
 
+// Attack
+api.route('/version')
+  .get(function(req, res) {
+    var apiVersion = require('package.json').version;
+    var kocVersion = require('node_modules/koc/package.json').version;
+    res.json({
+      api: apiVersion,
+      koc: kocVersion,
+    });
+  });
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
