@@ -425,7 +425,34 @@ api.route('/attack/:userid')
     passPromise( res.koc.attack, req, res, true, [ 'userid', 'turing' ], [], 'attack a user' );
   });
 
-// Attack
+// Raid
+api.route('/raid/:userid')
+  .get(function(req, res) {
+    var userid = req.params.userid;
+    if(!isFinite(userid)&&userid>0) {
+      res.json({
+        success: false,
+        error: "'userid' must be a positive number",
+      });
+      return;
+    }
+    req.body.userid = Number(userid);
+    passPromise( res.koc.raid, req, res, true, [ 'userid' ] );
+  })
+  .post(function(req, res) {
+    var userid = req.params.userid;
+    if(!isFinite(userid)&&userid>0) {
+      res.json({
+        success: false,
+        error: "'userid' must be a positive number",
+      });
+      return;
+    }
+    req.body.userid = Number(userid);
+    passPromise( res.koc.raid, req, res, true, [ 'userid', 'turing' ], [], 'raid a user' );
+  });
+
+// Version
 api.route('/version')
   .get(function(req, res) {
     var apiVersion = require('./package.json').version;
