@@ -4,7 +4,8 @@
   "description": "API for the online MMORPG Kings of Chaos (KoC)",
   "main": "server.js",
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,10 @@
     "mocha": "1.x.x",
     "chai": "1.x.x",
     "chai-as-promised": "4.x.x",
-    "supertest" : "*"
+    "supertest": "*"
+  },
+  "subdomain": "koc-api",
+  "engines": {
+    "node": "0.10.x"
   }
 }
