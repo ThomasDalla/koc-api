@@ -158,7 +158,15 @@ api.route('/:var(verify-email|verify_email|verifyEmail)').post(function(req, res
 
 // LOGIN
 api.route('/login').post(function(req, res) {
-    passPromise( res.koc.login, req, res, false, [ "username", "password" ], [], "login" );
+  if(process.env.DYNO !== undefined || process.env.OPENSHIFT_NODEJS_IP !== undefined) {
+    res.json({
+      message: 'Login disabled from the API',
+      timestamp: getTimeStamp()
+    });
+  }
+  else { // local
+    passPromise(res.koc.login, req, res, false, ["username", "password"], [], "login");
+  }
 });
 
 // Get User Info (from the Base)
