@@ -119,9 +119,12 @@ var api = express.Router();
 
 // API Middleware to use for all requests to capture the X-KoC-Session header
 api.use(function(req, res, next) {
-    // create our KoC helper
-    res.koc = new KoC();
-    // set the session_id, if one was passed
+  // create our KoC helper
+  res.koc = new KoC();
+  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  var now = new Date().toJSON();
+  console.log("[" + now + "][" + ip + "]["+req.method+"][" + req.originalUrl + "]");
+  // set the session_id, if one was passed
 	if( req.headers[KOC_SESSION_HEADER_NAME] !== undefined
 	        && req.headers[KOC_SESSION_HEADER_NAME].length )
 	    res.koc.setSession(req.headers[KOC_SESSION_HEADER_NAME]);
