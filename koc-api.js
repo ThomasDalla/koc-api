@@ -471,6 +471,12 @@ api.route('/version')
     });
   });
 
+// Set Resolution
+api.route('/setres')
+  .get(function(req, res) {
+    passPromise( res.koc.setres, req, res, false, [] );
+  });
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
