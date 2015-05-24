@@ -110,6 +110,9 @@ router.use(express.static(__dirname + '/public'));
 router.get('/', function(req, res) {
     res.sendFile(__dirname + '/public/home.html');
 });
+router.get('/logo.png', function(req, res) {
+  res.sendFile(__dirname + '/public/koc_logo_png24.png');
+});
 
 // API
 // =============================================================================
