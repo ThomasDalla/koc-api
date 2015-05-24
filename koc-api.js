@@ -110,9 +110,6 @@ router.use(express.static(__dirname + '/public'));
 router.get('/', function(req, res) {
     res.sendFile(__dirname + '/public/home.html');
 });
-router.get('/logo.png', function(req, res) {
-  res.sendFile(__dirname + '/public/koc_logo_png24.png');
-});
 
 // API
 // =============================================================================
@@ -140,6 +137,11 @@ api.get('/', function(req, res) {
 	    message: 'API Root. Read the doc to learn how to use it.',
         timestamp: getTimeStamp()
 	});
+});
+
+// Logo
+api.get('/logo.png', function(req, res) {
+  res.sendFile(__dirname + '/public/koc_logo_png24.png');
 });
 
 // CAPTCHA
