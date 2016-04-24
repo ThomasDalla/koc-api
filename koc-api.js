@@ -485,6 +485,27 @@ api.route('/setres')
     passPromise( res.koc.setres, req, res, false, [] );
   });
 
+// Inbox
+api.route('/inbox')
+  .get(function(req, res) {
+      passPromise( res.koc.inbox, req, res, true );
+  });
+
+// Send a message
+api.route('/writemail/:userid')
+  .post(function(req, res) {
+    var userid = req.params.userid;
+    if(!isFinite(userid)&&userid>0) {
+      res.json({
+        success: false,
+        error: "'userid' must be a positive number",
+      });
+      return;
+    }
+    req.body.userid = Number(userid);
+    passPromise( res.koc.writemail, req, res, true, [ 'userid', 'subject', 'message' ], [ 'turing' ], 'send a message' );
+  });
+
 // REGISTER OUR ROUTES
 // =============================================================================
 app.use('/'   , router);
